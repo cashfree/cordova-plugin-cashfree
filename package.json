@@ -1,0 +1,27 @@
+{
+  "name": "cordova-plugin-cashfree",
+  "version": "1.0.5",
+  "cordova": {
+    "id": "cordova-plugin-cashfree",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "author": "Cashfree Developers <developer@cashfree.com> (https://casbfree.com/)",
+  "description": "Cordova/Phonegap plugin for Cashfree's Mobile payments SDKs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cashfree/cordova-plugin-cashfree.git"
+  },
+  "keywords": [
+    "cashfree",
+    "ecosystem:cordova",
+    "cordova",
+    "phonegap",
+    "ionic",
+    "cordova-android",
+    "cordova-ios",
+    "cordova-plugin-cashfree"
+  ]
+}

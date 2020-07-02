@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    id="cordova-plugin-cashfree"
+    version="1.0.0">
+    <name>Cordova Cashfree Plugin</name>
+    <description>Cashfree's cordova plugin for payments</description>
+    <license>MIT</license>
+    <keywords></keywords>
+    <repo>https://github.com/cashfree/cordova-plugin-cashfree.git</repo>
+    <issue>https://github.com/cashfree/cordova-plugin-cashfree/issues</issue>
+    
+
+    <!-- android -->
+    <platform name="android">
+      <js-module src="www/cashfree.js" name="plugin">
+        <runs/>
+
+        <!-- This is the window variable name you want, like window.Cashfree -->
+        <clobbers target="Cashfree" />
+      </js-module>
+      <config-file target="res/xml/config.xml" parent="/*">
+        <feature name="Cashfree">
+          <param name="android-package" value="com.plugin.Cashfree" />
+          <param name="onload" value="true" />
+        </feature>
+      </config-file>
+
+      <source-file src="src/android/com/plugin/Cashfree.java" target-dir="src/com/plugin/" />
+    </platform>
+
+    <!-- ios -->
+    <platform name="ios">
+        <js-module src="www/cashfree.js" name="plugin">
+            <runs/>
+            <clobbers target="Cashfree" />
+        </js-module>
+        <config-file target="config.xml" parent="/*">
+            <feature name="Cashfree">
+                <param name="ios-package" value="Cashfree" onload="true" />
+            </feature>
+        </config-file>
+
+        <header-file src="src/ios/Cashfree.h" />
+        <source-file src="src/ios/Cashfree.m" />
+    </platform>
+</plugin>
