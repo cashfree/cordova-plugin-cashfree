@@ -85,16 +85,16 @@ declare var Cashfree : any;
 var skdinput = {
     env: "TEST", //PROD or TEST
     order: {
-		"orderId": "Order0001",
-		"orderAmount":1,
-		"orderCurrency": "INR",
-		"customerName": "Jane Doe",
-		"customerPhone": "8014012322",
-		"customerEmail": "dev@cashfree.com",
-		"notifyUrl": "https://your.domain/notify"
+    "orderId": "Order0001",
+    "orderAmount":1,
+    "orderCurrency": "INR",
+    "customerName": "Jane Doe",
+    "customerPhone": "8014012322",
+    "customerEmail": "dev@cashfree.com",
+    "notifyUrl": "https://your.domain/notify"
     },
-	appId: "<YOUR_APP_ID>",
-	cftoken: "<your cftoken generated from backend>"
+appId: "<YOUR_APP_ID>",
+cftoken: "<your cftoken generated from backend>"
 }
 
 Cashfree.checkout(skdinput).then(function(txResponse){
