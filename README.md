@@ -77,13 +77,13 @@ The "cftoken" is the token that is used authenticate your payment request that w
 
 ## Usage code
 
-### Declare Cashfree variable
+#### Declare Cashfree variable
 Declare Cashfree vairable in your app/file
 ```
 declare var Cashfree : any;
 ```
 
-### Create order object
+#### Create order object
 ```js
 var skdinput = {
     env: "TEST", //PROD or TEST
@@ -100,7 +100,7 @@ var skdinput = {
     cftoken: "<your cftoken generated from backend>"
 }
 ```
-### Capture payment
+#### Initiate and handle payment response
 ```js
 Cashfree.checkout(skdinput).then(function(txResponse){
     console.log(txResponse);
