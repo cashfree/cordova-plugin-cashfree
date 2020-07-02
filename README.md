@@ -7,7 +7,7 @@ Official Cordova/Phonegap plugin for integrating Cashfree's checkout.
 - Android
 - iOS
 
-## Usage:
+## Installation:
 
 Install the plugin
 
