@@ -76,11 +76,14 @@ curl -XPOST -H 'Content-Type: application/json' -H 'x-client-id: YOUR_APP_ID' -H
 The "cftoken" is the token that is used authenticate your payment request that will be covered in the next step.
 
 ## Usage code
+
+### Declare Cashfree variable
 Declare Cashfree vairable in your app/file
 ```
 declare var Cashfree : any;
 ```
 
+### Create order object
 ```js
 var skdinput = {
     env: "TEST", //PROD or TEST
@@ -96,7 +99,9 @@ var skdinput = {
     appId: "<YOUR_APP_ID>",
     cftoken: "<your cftoken generated from backend>"
 }
-
+```
+### Capture payment
+```js
 Cashfree.checkout(skdinput).then(function(txResponse){
     console.log(txResponse);
 }, function(err){
