@@ -1,0 +1,5 @@
+node_modules/
+.DS_Store
+examples/*/platforms/
+examples/*/plugins/
+examples/*/www/

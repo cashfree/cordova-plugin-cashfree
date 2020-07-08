@@ -7,6 +7,10 @@ Official Cordova/Phonegap plugin for integrating Cashfree's checkout.
 - Android
 - iOS
 
+You can check out the sample apps for
+
+- [Ionic Angular](examples/ionicangularsampleblank).
+
 ## Installation:
 
 Install the plugin
