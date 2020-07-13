@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     id="cordova-plugin-cashfree"
-    version="1.0.0">
+    version="1.0.1">
     <name>Cordova Cashfree Plugin</name>
     <description>Cashfree's cordova plugin for payments</description>
     <license>MIT</license>
