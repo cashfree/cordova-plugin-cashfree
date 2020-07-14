@@ -1,0 +1,53 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Cashfree Ionic Demo
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <img
+    style="display: block; margin: 0 auto; background: #714b9b;"
+    width="200"
+    src="https://www.cashfree.com/images/newlanding/logo.svg"
+  />
+  <p style="padding: 0 15px; text-align: justify; margin-bottom: 0;">
+    A Complete Payments Toolkit for India The fastest and easiest way to collect
+    and disburse payments for growing businesses
+  </p>
+
+  <ion-list>
+    <ion-list-header>
+      <ion-label>
+        Please fill up order details
+      </ion-label>
+    </ion-list-header>
+
+    <ion-item>
+      <ion-label>Order Currency</ion-label>
+      <ion-select [(ngModel)]="currency" placeholder="Select One">
+        <ion-select-option value="INR">Indian Rupee</ion-select-option>
+        <ion-select-option value="USD">US Dollars</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Customer Phone Number</ion-label>
+      <ion-input
+        [(ngModel)]="phoneNumber"
+        placeholder="Enter phone number"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Order Amount</ion-label>
+      <ion-input
+        [(ngModel)]="amount"
+        placeholder="Enter order amount"
+        value="1500"
+      ></ion-input>
+    </ion-item>
+  </ion-list>
+  <ion-button class="ion-margin" expand="block" (click)="checkoutWithCashfree()"
+    >Pay With Cashfree</ion-button
+  >
+</ion-content>

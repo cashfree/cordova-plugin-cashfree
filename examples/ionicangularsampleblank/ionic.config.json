@@ -1,0 +1,7 @@
+{
+  "name": "ionicAngularSampleBlank",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}
