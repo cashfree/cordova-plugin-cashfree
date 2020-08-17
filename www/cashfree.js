@@ -63,8 +63,7 @@ const Cashfree = {
           order.orderAmount &&
           order.customerName &&
           order.customerPhone &&
-          order.customerEmail &&
-          order.returnUrl
+          order.customerEmail
         )
       ) {
         return reject({
@@ -91,12 +90,6 @@ const Cashfree = {
         });
       }
 
-      if (!validateUrl(order.returnUrl)) {
-        return reject({
-          message: "Invalid return url",
-        });
-      }
-
       const notifyUrlObj = validateUrl(order.notifyUrl);
 
       if (
@@ -105,6 +98,12 @@ const Cashfree = {
       ) {
         return reject({
           message: "Invalid notify url",
+        });
+      }
+
+      if (order.returnUrl && !validateUrl(order.returnUrl)) {
+        return reject({
+          message: "Invalid return url",
         });
       }
 
