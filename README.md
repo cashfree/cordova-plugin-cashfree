@@ -102,6 +102,7 @@ const skdInput = {
     customerName: "Jane Doe",
     customerPhone: "8014012322",
     customerEmail: "dev@cashfree.com",
+    returnUrl: "https://your.domain/return",
     notifyUrl: "https://your.domain/notify",
   },
   appId: "<YOUR_APP_ID>",

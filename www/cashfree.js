@@ -1,4 +1,6 @@
 const exec = require("cordova/exec");
+const { URL } = require("url");
+
 const ENVS = {
   TEST: {
     url: "https://test.cashfree.com/billpay/checkout/post/submit",
@@ -9,14 +11,31 @@ const ENVS = {
 };
 
 const PLUGIN_NAME = "Cashfree";
-const REQUIRED_KEYS = ["appId", "cfToken", "order"];
+const REQUIRED_KEYS = ["appId", "cftoken"];
+
+const validateEmail = (email) => {
+  const re = /\S+@\S+\.\S+/;
+  return re.test(email);
+};
+
+const validateUrl = (str) => {
+  let urlObj;
+
+  try {
+    urlObj = new URL(str);
+  } catch (e) {
+    return false;
+  }
+
+  return urlObj;
+};
 
 const Cashfree = {
   echo: function (phrase, cb) {
     exec(cb, null, PLUGIN_NAME, "echo", [phrase]);
   },
   checkout: function (sdkInput, cb) {
-    return new Promise(function (resolve) {
+    return new Promise(function (resolve, reject) {
       const envObj = ENVS[sdkInput.env];
 
       if (!envObj) {
@@ -27,16 +46,69 @@ const Cashfree = {
         sdkInput.hasOwnProperty(key)
       );
 
-      if (!isValid) {
+      const {
+        order,
+        toolbarColor = "#7d49f0",
+        closeButtonColor = "#ffffff",
+      } = sdkInput;
+
+      if (!isValid || typeof order !== "object") {
         return reject({
-          message: "Bad request, please check the documentation!",
+          message: "Bad request. Please check the documentation!",
+        });
+      }
+
+      if (
+        !(
+          order.orderAmount &&
+          order.customerName &&
+          order.customerPhone &&
+          order.customerEmail &&
+          order.returnUrl
+        )
+      ) {
+        return reject({
+          message:
+            "Invalid parameters for order property. Please check the documentation!",
+        });
+      }
+
+      if (order.orderAmount <= 0) {
+        return reject({
+          message: "Invalid order amount",
+        });
+      }
+
+      if (order.customerPhone.length < 9) {
+        return reject({
+          message: "Invalid customer phone number",
+        });
+      }
+
+      if (!validateEmail(order.customerEmail)) {
+        return reject({
+          message: "Invalid customer email",
+        });
+      }
+
+      if (!validateUrl(order.returnUrl)) {
+        return reject({
+          message: "Invalid return url",
+        });
+      }
+
+      const notifyUrlObj = validateUrl(order.notifyUrl);
+
+      if (
+        order.notifyUrl &&
+        (!notifyUrlObj || notifyUrlObj.protocol !== "https:")
+      ) {
+        return reject({
+          message: "Invalid notify url",
         });
       }
 
       const { url } = envObj;
-      const order = sdkInput.order;
-      const toolbarColor = sdkInput.toolbarColor || "#7d49f0";
-      const closeButtonColor = sdkInput.closeButtonColor || "#ffffff";
 
       let pageContent = `
         <html>
