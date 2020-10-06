@@ -1,6 +1,6 @@
-# Cordova/Phonegap bindings for Cashfree's SDKs
+# DEPRECATED
 
-Official Cordova/Phonegap plugin for integrating Cashfree's checkout.
+Please check https://www.npmjs.com/package/cashfree_pg_sdk_cordova for the Cashfree Cordova plugin. This plugin has been deprecated.
 
 ## Supported platforms
 
