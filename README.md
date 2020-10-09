@@ -1,6 +1,8 @@
 # DEPRECATED
 
-Please check https://www.npmjs.com/package/cashfree_pg_sdk_cordova for the Cashfree Cordova plugin. This plugin has been deprecated.
+Please check https://www.npmjs.com/package/cashfree_pg_sdk_cordova for the Cashfree Cordova plugin. 
+
+Please check https://github.com/cashfree/cordova-pgsdk-demo-app for sample app.
 
 ## Supported platforms
 
