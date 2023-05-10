@@ -1,19 +1,25 @@
 {
-  "name": "cordova-plugin-cashfree",
-  "version": "1.0.3",
+  "name": "cordova-plugin-cashfree-pg",
+  "version": "1.0.0",
   "cordova": {
-    "id": "cordova-plugin-cashfree",
+    "id": "cordova-plugin-cashfree-pg",
     "platforms": [
       "android",
       "ios"
     ]
   },
-  "main": "www/cashfree.js",
   "author": "Cashfree Developers <developer@cashfree.com> (https://cashfree.com/)",
-  "description": "Cordova/Phonegap plugin for Cashfree's Mobile payments SDKs",
+  "description": "Cordova/Ionic/Phonegap plugin for Cashfree's Mobile payments SDKs",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cashfree/cordova-plugin-cashfree.git"
+  },
+  "license": "ISC",
+  "main": "dist/CFPaymentGateway.js",
+  "type": "module",
+  "types": "dist/CFPaymentGateway.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "cashfree",
@@ -23,10 +29,16 @@
     "ionic",
     "cordova-android",
     "cordova-ios",
-    "cordova-plugin-cashfree"
+    "cordova-plugin-cashfree-pg"
   ],
+  "dependencies": {
+    "cashfree-pg-api-contract": "2.0.1"
+  },
   "bugs": {
     "url": "https://github.com/cashfree/cordova-plugin-cashfree/issues"
   },
-  "homepage": "https://github.com/cashfree/cordova-plugin-cashfree#README.md"
+  "devDependencies": {
+    "@types/node": "^18.6.4",
+    "typescript": "^4.1.3"
+  }
 }

@@ -2,8 +2,6 @@
 node_modules/
 examples/
 .DS_Store
-CHANGELOG.md
-CONTRUBUTING.md
 *.log
 .gitignore
 .gitattributes
