@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-cashfree-pg",
-  "version": "1.0.0-dev.2",
+  "version": "1.0.0-dev.3",
   "cordova": {
     "id": "cordova-plugin-cashfree-pg",
     "platforms": [
