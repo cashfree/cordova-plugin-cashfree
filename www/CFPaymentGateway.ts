@@ -65,7 +65,7 @@ const CFPaymentGatewayService = module.exports = {
             // @ts-ignore
             if (callback) {
                 // @ts-ignore
-                callback.onVerify(result.orderID);
+                callback.onVerify(result);
             }
         }, function (error: any) {
             // @ts-ignore
@@ -89,7 +89,7 @@ const CFPaymentGatewayService = module.exports = {
             // @ts-ignore
             if (callback) {
                 // @ts-ignore
-                callback.onVerify(result.orderID);
+                callback.onVerify(result);
             }
         }, function (error: any) {
             // @ts-ignore
@@ -105,7 +105,7 @@ const CFPaymentGatewayService = module.exports = {
             // @ts-ignore
             if (cfCallback) {
                 // @ts-ignore
-                cfCallback.onVerify(result.orderID);
+                cfCallback.onVerify(result);
             }
         }, function (error: any) {
             // @ts-ignore
