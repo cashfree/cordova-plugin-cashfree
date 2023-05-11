@@ -1,206 +1,98 @@
-[//]: # (## Supported platforms)
-
-[//]: # ()
-[//]: # (- Android)
-
-[//]: # (- iOS)
-
-[//]: # ()
-[//]: # (You can check out the sample apps for)
-
-[//]: # ()
-[//]: # (- [Ionic Angular]&#40;examples/ionicangularsampleblank&#41;.)
-
-[//]: # ()
-[//]: # (## Installation:)
-
-[//]: # ()
-[//]: # (Install the plugin)
-
-[//]: # ()
-[//]: # (**Note**: This plugin has a dependency on [cordova-plugin-inappbrowser]&#40;https://github.com/apache/cordova-plugin-inappbrowser&#41;.)
-
-[//]: # ()
-[//]: # (```bash)
-
-[//]: # (cd your-project-folder)
-
-[//]: # (cordova plugin add cordova-plugin-inappbrowser)
-
-[//]: # (cordova plugin add https://github.com/cashfree/cordova-plugin-cashfree)
-
-[//]: # (```)
-
-[//]: # ()
-[//]: # (Add navigation to cashfree.com. Add this line in your `config.xml`)
-
-[//]: # ()
-[//]: # (```xml)
-
-[//]: # (<allow-navigation href="*.cashfree.com" />)
-
-[//]: # (```)
-
-[//]: # ()
-[//]: # (## Step 1: Generate Token &#40;From Backend&#41;)
-
-[//]: # ()
-[//]: # (You will need to generate a token from your backend and pass it to app while initiating payments. For generating token you need to use our token generation API.)
-
-[//]: # ()
-[//]: # (Please note that this API is called only from your <b><u>backend</u></b> as it uses **secretKey**. Thus this API should **never be called from App**.)
-
-[//]: # ()
-[//]: # (### Request Description)
-
-[//]: # ()
-[//]: # (For `production/live` usage set the form action to:)
-
-[//]: # (`https://api.cashfree.com/api/v2/cftoken/order`)
-
-[//]: # ()
-[//]: # (For `test` usage set the form action to:)
-
-[//]: # (`https://test.cashfree.com/api/v2/cftoken/order`)
-
-[//]: # ()
-[//]: # (You need to send `orderId`, `orderCurrency` and `orderAmount` as a JSON object to the API endpoint and in response a token will received. Please see the description of request below.)
-
-[//]: # ()
-[//]: # (```bash)
-
-[//]: # (curl -XPOST -H 'Content-Type: application/json')
-
-[//]: # (-H 'x-client-id: <YOUR_APP_ID>')
-
-[//]: # (-H 'x-client-secret: <YOUR_SECRET_KEY>')
-
-[//]: # (-d '{)
-
-[//]: # (  "orderId": "<ORDER_ID>",)
-
-[//]: # (  "orderAmount":<ORDER_AMOUNT>,)
-
-[//]: # (  "orderCurrency": "INR")
-
-[//]: # (}' 'https://test.cashfree.com/api/v2/cftoken/order')
-
-[//]: # (```)
-
-[//]: # ()
-[//]: # (### Request Example)
-
-[//]: # ()
-[//]: # (Replace **YOUR_APP_ID** and **YOUR_SECRET_KEY** with actual values.)
-
-[//]: # ()
-[//]: # (```bash)
-
-[//]: # (curl -XPOST -H 'Content-Type: application/json' -H 'x-client-id: YOUR_APP_ID' -H 'x-client-secret: YOUR_SECRET_KEY' -d '{)
-
-[//]: # (  "orderId": "Order0001",)
-
-[//]: # (  "orderAmount":1,)
-
-[//]: # (  "orderCurrency":"INR")
-
-[//]: # (}' 'https://test.cashfree.com/api/v2/cftoken/order')
-
-[//]: # (```)
-
-[//]: # ()
-[//]: # (### Response Example)
-
-[//]: # ()
-[//]: # (```bash)
-
-[//]: # ({)
-
-[//]: # (  "status": "OK",)
-
-[//]: # (  "message": "Token generated",)
-
-[//]: # (  "cftoken": "v79JCN4MzUIJiOicGbhJCLiQ1VKJiOiAXe0Jye.s79BTM0AjNwUDN1EjOiAHelJCLiIlTJJiOik3YuVmcyV3QyVGZy9mIsEjOiQnb19WbBJXZkJ3biwiIxADMwIXZkJ3TiojIklkclRmcvJye.K3NKICVS5DcEzXm2VQUO_ZagtWMIKKXzYOqPZ4x0r2P_N3-PRu2mowm-8UXoyqAgsG")
-
-[//]: # (})
-
-[//]: # (```)
-
-[//]: # ()
-[//]: # (The `cftoken` is the token that is used authenticate your payment request that will be covered in the next step.)
-
-[//]: # ()
-[//]: # (## Usage code)
-
-[//]: # ()
-[//]: # (#### Declare Cashfree variable)
-
-[//]: # ()
-[//]: # (Declare Cashfree variable in your app/file)
-
-[//]: # ()
-[//]: # (```)
-
-[//]: # (declare let Cashfree : any;)
-
-[//]: # (```)
-
-[//]: # ()
-[//]: # (#### Create order object)
-
-[//]: # ()
-[//]: # (```js)
-
-[//]: # (const skdInput = {)
-
-[//]: # (  env: "TEST", // PROD or TEST)
-
-[//]: # (  order: {)
-
-[//]: # (    orderId: "Order0001",)
-
-[//]: # (    orderAmount: 1,)
-
-[//]: # (    orderCurrency: "INR",)
-
-[//]: # (    customerName: "Jane Doe",)
-
-[//]: # (    customerPhone: "8014012322",)
-
-[//]: # (    customerEmail: "dev@cashfree.com",)
-
-[//]: # (    notifyUrl: "https://your.domain/notify",)
-
-[//]: # (  },)
-
-[//]: # (  appId: "<YOUR_APP_ID>",)
-
-[//]: # (  cftoken: "<your cftoken generated from backend>",)
-
-[//]: # (};)
-
-[//]: # (```)
-
-[//]: # ()
-[//]: # (#### Initiate and handle payment response)
-
-[//]: # ()
-[//]: # (```js)
-
-[//]: # (Cashfree.checkout&#40;skdInput&#41;.then&#40;)
-
-[//]: # (  function &#40;txResponse&#41; {)
-
-[//]: # (    console.log&#40;txResponse&#41;;)
-
-[//]: # (  },)
-
-[//]: # (  function &#40;err&#41; {)
-
-[//]: # (    console.log&#40;err&#41;;)
-
-[//]: # (  })
-
-[//]: # (&#41;;)
-
-[//]: # (```)
+## Supported platforms
+
+- Android
+- iOS
+
+
+## Installation:
+Install the plugin
+
+```bash
+
+cd your-project-folder
+
+cordova plugin add cordova-plugin-cashfree-pg
+
+```
+
+
+## Step 1: Generate Session ID (From Backend)
+
+
+You will need to generate a sessionID from your backend and pass it to app while initiating payments.
+
+API Doc Link - https://docs.cashfree.com/reference/createorder
+
+Note: This API is called only from your <b><u>backend</u></b> as it uses **secretKey**. Thus this API should **never be called from App**.
+
+
+## Step 2: Create a Payment Object
+
+### Step 2.1: Create a Drop Payment Object
+```js
+const dropPaymentObject = {
+    "components": ["CARD", "UPI", "NB", "WALLET", "PAY_LATER"], //optional
+    "theme": { //optional
+        "navigationBarBackgroundColor": "#E64A19",
+        "navigationBarTextColor": "#FFFFFF",
+        "buttonBackgroundColor": "#FFC107",
+        "buttonTextColor": "#FFFFFF",
+        "primaryTextColor": "#212121",
+        "secondaryTextColor": "#757575"
+    },
+    "session":  { //required
+        "payment_session_id": "order_session_id",
+        "orderID": "order_id",
+        "environment": "SANDBOX" // "SANDBOX" or "PRODUCTION"
+    }
+}
+```
+
+### Step 2.2: Create a Web Checkout Payment Object
+```js
+const webPaymentObject = {
+    "theme": { //optional
+        "navigationBarBackgroundColor": "#E64A19",
+        "navigationBarTextColor": "#FFFFFF"
+    },
+    "session":  { //required
+        "payment_session_id": "order_session_id",
+        "orderID": "order_id",
+        "environment": "SANDBOX" // "SANDBOX" or "PRODUCTION"
+    }
+}
+```
+
+
+## Step 3: SetCallback
+Set the callback **on the creation** of your payment page.
+```js
+
+const callbacks = {
+    onVerify: function (result) {
+        console.log("This is in the Application Verify: " + result);
+        const orderId = result.orderID;
+    },
+    onError: function (error){
+        console.log("This is in the Application Error: " + error);
+        const orderID = error.orderID
+        const status = error.status
+        const code = error.code
+        const type = error.type
+        const message = error.message
+    }
+}
+CFPaymentGateway.setCallback(callbacks) // onLoad of the Page
+```
+
+## Step 4: Initiate Payment
+
+### Step 4.1: Initiate Drop Payment
+```js
+CFPaymentGateway.doDropPayment(dropPaymentObject)
+```
+
+### Step 4.2: Initiate Web Checkout Payment
+```js
+CFPaymentGateway.doWebCheckoutPayment(webPaymentObject)
+```
