@@ -2,6 +2,7 @@
 node_modules/
 examples/
 .DS_Store
+.idea/
 www/
 example-cordova/
 *.log
