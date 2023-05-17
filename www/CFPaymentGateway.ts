@@ -1,4 +1,6 @@
 const PLUGIN_NAME = "CFPaymentGateway";
+
+declare let cordova: any
 function validateDropInput(cfDropPayment: any) {
     if (cfDropPayment) {
         if (cfDropPayment.session) {
