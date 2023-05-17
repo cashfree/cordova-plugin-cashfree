@@ -2,7 +2,7 @@
 node_modules/
 examples/
 .DS_Store
-.www/
+www/
 example-cordova/
 *.log
 .gitignore
