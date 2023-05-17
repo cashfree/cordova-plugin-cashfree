@@ -1,5 +1,4 @@
 const PLUGIN_NAME = "CFPaymentGateway";
-const cordova = require('cordova');
 function validateDropInput(cfDropPayment: any) {
     if (cfDropPayment) {
         if (cfDropPayment.session) {
