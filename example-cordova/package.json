@@ -46,6 +46,6 @@
   },
   "dependencies": {
     "cashfree-pg-api-contract": "^2.0.8",
-    "cordova-plugin-cashfree-pg": "^1.0.11-dev.0"
+    "cordova-plugin-cashfree-pg": "^1.0.11"
   }
 }
