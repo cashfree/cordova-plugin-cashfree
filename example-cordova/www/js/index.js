@@ -33,10 +33,10 @@ function onDeviceReady() {
     let dropElement = document.getElementById("onDrop");
     let upiElement = document.getElementById("onUPI");
     webElement.addEventListener('touchstart', (e) => addButtonClass(webElement));
-    webElement.addEventListener('touchend', (e) => removeButtonClass(webElement));
     dropElement.addEventListener('touchstart', (e) => addButtonClass(dropElement));
-    dropElement.addEventListener('touchend', (e) => removeButtonClass(dropElement));
     upiElement.addEventListener('touchstart', (e) => addButtonClass(upiElement));
+    webElement.addEventListener('touchend', (e) => removeButtonClass(webElement));
+    dropElement.addEventListener('touchend', (e) => removeButtonClass(dropElement));
     upiElement.addEventListener('touchend', (e) => removeButtonClass(upiElement));
     webElement.addEventListener("click", (e) => initiateWebPayment());
     dropElement.addEventListener("click", (e) => initiateDropPayment());
@@ -81,8 +81,8 @@ function initiateDropPayment() {
             "secondaryTextColor": "#757575"
         },
         "session": {
-            "payment_session_id": SESSION_ID,
-            "orderID": ORDER_ID,
+            "payment_session_id": 'session_GwTuBDThzRCg-XvcNn6fl8AkuXfYJ3Iqf3Ok3fuaGoDVTMGV_2NZYT0_gaWwWUsnaSJUefxt29Nt30RYVK74KuWfau85tHGpuP_w5gHU1LAF_r09SskT4-AUNmspayment',
+            "orderID": 'devstudio_7359930964249179062',
             "environment": ENV
         }
     })
@@ -100,8 +100,8 @@ function initiateUPIPayment() {
             "secondaryTextColor": "#757575"
         },
         "session": {
-            "payment_session_id": SESSION_ID,
-            "orderID": ORDER_ID,
+            "payment_session_id": 'session_GwTuBDThzRCg-XvcNn6fl8AkuXfYJ3Iqf3Ok3fuaGoDVTMGV_2NZYT0_gaWwWUsnaSJUefxt29Nt30RYVK74KuWfau85tHGpuP_w5gHU1LAF_r09SskT4-AUNmspayment',
+            "orderID": 'devstudio_7359930964249179062',
             "environment": ENV
         }
     })
@@ -115,8 +115,8 @@ function initiateWebPayment() {
             "navigationBarTextColor": "#FFFFFF"
         },
         "session": {
-            "payment_session_id": SESSION_ID,
-            "orderID": ORDER_ID,
+            "payment_session_id": 'session_GwTuBDThzRCg-XvcNn6fl8AkuXfYJ3Iqf3Ok3fuaGoDVTMGV_2NZYT0_gaWwWUsnaSJUefxt29Nt30RYVK74KuWfau85tHGpuP_w5gHU1LAF_r09SskT4-AUNmspayment',
+            "orderID": 'devstudio_7359930964249179062',
             "environment": ENV
         }
     })
@@ -126,8 +126,8 @@ function initiateSubscriptionPayment() {
     document.getElementById('response_text').innerText = "Response will Show Here"
     var subSession = {
         "session": {
-            "subscription_session_id": SESSION_ID,
-            "subscription_id": ORDER_ID,
+            "subscription_session_id": 'sub_session_PL94-dbcLpwRQKD10iZ6LeZtrjzEeiCa7T44SQ84lY1A34_hYpbo10P_0FJNR3cAEmx6BQ8zDYLoY4xegxJD9MLIuHmrAB20Zl_T7HrbWPzAI0ywt23Azb7GCjKAcXspayment',
+            "subscription_id": 'devstudio_subs_7359931205789880402',
             "environment": ENV
         }
     }
