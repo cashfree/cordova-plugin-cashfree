@@ -23,7 +23,7 @@
         </config-file>
         <config-file target="*-Info.plist" parent="LSApplicationCategoryType">
         </config-file>
-        <framework src="CashfreePG" type="podspec" spec="~>2.0.7"/>
+        <framework src="CashfreePG" type="podspec" spec="~>2.0.9"/>
     </platform>
     <platform name="android">
         <framework custom="true" src="src/android/CashfreePGSDK.gradle" type="gradleReference"/>
