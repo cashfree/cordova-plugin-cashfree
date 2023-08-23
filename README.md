@@ -48,7 +48,27 @@ const dropPaymentObject = {
 }
 ```
 
-### Step 2.2: Create a Web Checkout Payment Object
+### Step 2.2: Create a UPI Payment Object
+```js
+const upiPaymentObject = {
+    "theme": { //optional
+        "navigationBarBackgroundColor": "#E64A19", //ios
+        "navigationBarTextColor": "#FFFFFF", //ios
+        "buttonBackgroundColor": "#FFC107", //ios
+        "buttonTextColor": "#FFFFFF", //ios
+        "primaryTextColor": "#212121", 
+        "secondaryTextColor": "#757575", //ios
+        "backgroundColor": "#FFFFFF"
+    },
+    "session":  { //required
+        "payment_session_id": "order_session_id",
+        "orderID": "order_id",
+        "environment": "SANDBOX" // "SANDBOX" or "PRODUCTION"
+    }
+}
+```
+
+### Step 2.3: Create a Web Checkout Payment Object
 ```js
 const webPaymentObject = {
     "theme": { //optional
