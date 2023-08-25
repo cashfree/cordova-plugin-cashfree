@@ -31,12 +31,16 @@ function onDeviceReady() {
     console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
     let webElement = document.getElementById("onWEB");
     let dropElement = document.getElementById("onDrop");
+    let upiElement = document.getElementById("onUPI");
     webElement.addEventListener('touchstart', (e) => addButtonClass(webElement));
     webElement.addEventListener('touchend', (e) => removeButtonClass(webElement));
     dropElement.addEventListener('touchstart', (e) => addButtonClass(dropElement));
     dropElement.addEventListener('touchend', (e) => removeButtonClass(dropElement));
+    upiElement.addEventListener('touchstart', (e) => addButtonClass(upiElement));
+    upiElement.addEventListener('touchend', (e) => removeButtonClass(upiElement));
     webElement.addEventListener("click", (e) => initiateWebPayment());
     dropElement.addEventListener("click", (e) => initiateDropPayment());
+    upiElement.addEventListener("click", (e) => initiateUPIPayment());
 
     const callbacks = {
         onVerify: function (result) {
@@ -63,6 +67,25 @@ function initiateDropPayment() {
     document.getElementById('response_text').innerText = "Response will Show Here"
     CFPaymentGateway.doDropPayment({
         "components": ["CARD", "UPI", "NB", "WALLET", "PAY_LATER"],
+        "theme": {
+            "navigationBarBackgroundColor": "#E64A19",
+            "navigationBarTextColor": "#FFFFFF",
+            "buttonBackgroundColor": "#FFC107",
+            "buttonTextColor": "#FFFFFF",
+            "primaryTextColor": "#212121",
+            "secondaryTextColor": "#757575"
+        },
+        "session": {
+            "payment_session_id": SESSION_ID,
+            "orderID": ORDER_ID,
+            "environment": ENV
+        }
+    })
+}
+
+function initiateUPIPayment() {
+    document.getElementById('response_text').innerText = "Response will Show Here"
+    CFPaymentGateway.doUPIPayment({
         "theme": {
             "navigationBarBackgroundColor": "#E64A19",
             "navigationBarTextColor": "#FFFFFF",

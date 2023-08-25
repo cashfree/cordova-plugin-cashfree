@@ -115,7 +115,7 @@ class CFPaymentGateway : CDVPlugin {
                     let nativePayment = try CFDropCheckoutPayment.CFDropCheckoutPaymentBuilder()
                         .setSession(session!)
                         .setTheme(theme!)
-                        .setComponent(paymentComponents!)
+                        .setComponent(paymentComponents)
                         .build()
                     return nativePayment
 

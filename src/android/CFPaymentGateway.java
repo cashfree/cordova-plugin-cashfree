@@ -1,4 +1,4 @@
-package com.cashfree.pg.api.util;
+package com.cashfree.pg.cordova;
 
 import android.app.Activity;
 
