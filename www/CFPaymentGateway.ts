@@ -35,10 +35,31 @@ function validateWebInput(cfWebPayment: any) {
             }
             return null
         } else {
-            return "session object is missing in cfDropPayment object"
+            return "session object is missing in cfWebPayment object"
         }
     } else {
-        return "cfDropPayment object is missing"
+        return "cfWebPayment object is missing"
+    }
+}
+
+function validateUPIInput(cfUPIPayment: any) {
+    if (cfUPIPayment) {
+        if (cfUPIPayment.session) {
+            if (!cfUPIPayment.session.payment_session_id) {
+                return "payment_session_id object is missing in session object"
+            }
+            if (!cfUPIPayment.session.orderID) {
+                return "orderID object is missing in session object"
+            }
+            if (!cfUPIPayment.session.environment) {
+                return "environment object is missing in session object"
+            }
+            return null
+        } else {
+            return "session object is missing in cfUPIPayment object"
+        }
+    } else {
+        return "cfUPIPayment object is missing"
     }
 }
 function getError(message: string, orderId ?: string) {
@@ -52,6 +73,30 @@ function getError(message: string, orderId ?: string) {
 }
 const CFPaymentGatewayService = module.exports = {
     cfCallback: null,
+    doUPIPayment(cfUPIPayment: any) {
+        const callback = this.cfCallback;
+        const error = validateUPIInput(cfUPIPayment)
+        if (error) {
+            if (callback) {
+                // @ts-ignore
+                callback.onError(getError(error));
+            }
+            return
+        }
+        cordova.exec(function (result: any) {
+            // @ts-ignore
+            if (callback) {
+                // @ts-ignore
+                callback.onVerify(result);
+            }
+        }, function (error: any) {
+            // @ts-ignore
+            if (callback) {
+                // @ts-ignore
+                callback.onError(error);
+            }
+        }, PLUGIN_NAME, 'doUPIPayment', [JSON.stringify(cfUPIPayment), "1.0.5"]);
+    },
     doDropPayment(cfDropPayment: any) {
         const callback = this.cfCallback;
         const error = validateDropInput(cfDropPayment)
@@ -74,7 +119,7 @@ const CFPaymentGatewayService = module.exports = {
                 // @ts-ignore
                 callback.onError(error);
             }
-        }, PLUGIN_NAME, 'doDropPayment', [JSON.stringify(cfDropPayment), "1.0.0"]);
+        }, PLUGIN_NAME, 'doDropPayment', [JSON.stringify(cfDropPayment), "1.0.5"]);
     },
     doWebCheckoutPayment(cfWebPayment: any) {
         const callback = this.cfCallback;
@@ -98,7 +143,7 @@ const CFPaymentGatewayService = module.exports = {
                 // @ts-ignore
                 callback.onError(error);
             }
-        }, PLUGIN_NAME, 'doWebCheckoutPayment', [JSON.stringify(cfWebPayment), "1.0.0"]);
+        }, PLUGIN_NAME, 'doWebCheckoutPayment', [JSON.stringify(cfWebPayment), "1.0.5"]);
     },
     setCallback(cfCallback: any) {
         this.cfCallback = cfCallback;

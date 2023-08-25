@@ -30,6 +30,25 @@ class CFPaymentGateway : CDVPlugin {
         }
     }
 
+    @objc(doUPIPayment:)
+    func doUPIPayment(_ command: CDVInvokedUrlCommand) -> Void {
+        self.callbackId = command.callbackId ?? "";
+        let data = command.arguments[0] as? String ?? ""
+        let version = command.arguments[1] as? String ?? ""
+        do {
+            let dropObject = try! parseUPIPayment(paymentObject: data)
+            if (dropObject != nil) {
+                let systemVersion = UIDevice.current.systemVersion
+                dropObject!.setPlatform("icor-i-\(version)-xx-m-s-x-i-\(systemVersion.prefix(4))")
+                let vc = self.viewController;
+                try CFPaymentGatewayService.getInstance().doPayment(dropObject!, viewController: vc!)
+            }
+        }
+        catch {
+            print (error)
+        }
+    }
+
     @objc(doWebCheckoutPayment:)
     func doWebCheckoutPayment(_ command: CDVInvokedUrlCommand) -> Void {
         self.callbackId = command.callbackId ?? "";
@@ -81,6 +100,33 @@ class CFPaymentGateway : CDVPlugin {
         }
         return nil
     }
+
+    private func parseUPIPayment(paymentObject: String) throws -> CFDropCheckoutPayment? {
+            //        print(paymentObject)
+            let data = paymentObject.data(using: .utf8)!
+            if let output = try! JSONSerialization.jsonObject(with: data, options: .allowFragments) as? Dictionary<String, Any> {
+                do {
+                    let session = getSession(paymentObject: output)
+                    let paymentComponents = try CFPaymentComponent.CFPaymentComponentBuilder()
+                                        .enableComponents(["upi"])
+                                        .build()
+                    let theme = getTheme(paymentObject: output)
+
+                    let nativePayment = try CFDropCheckoutPayment.CFDropCheckoutPaymentBuilder()
+                        .setSession(session!)
+                        .setTheme(theme!)
+                        .setComponent(paymentComponents)
+                        .build()
+                    return nativePayment
+
+                } catch let e {
+                    let error = e as! CashfreeError
+                    print(error.localizedDescription)
+                    // Handle errors here
+                }
+            }
+            return nil
+        }
 
     private func parseWebPayment(paymentObject: String) throws -> CFSession? {
         let data = paymentObject.data(using: .utf8)!
