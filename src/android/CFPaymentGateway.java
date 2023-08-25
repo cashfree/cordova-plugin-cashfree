@@ -15,6 +15,7 @@ import com.cashfree.pg.core.api.utils.CFUtil;
 import com.cashfree.pg.core.api.webcheckout.CFWebCheckoutPayment;
 import com.cashfree.pg.core.api.webcheckout.CFWebCheckoutTheme;
 import com.cashfree.pg.ui.api.CFDropCheckoutPayment;
+import com.cashfree.pg.ui.api.upi.intent.CFUPIIntentCheckoutPayment;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -64,6 +65,22 @@ public class CFPaymentGateway extends CordovaPlugin implements CFCheckoutRespons
                 }
             }
             return true;
+        } else if ("doUPIPayment".equals(action)) {
+            try {
+                CFUPIIntentCheckoutPayment cfupiIntentCheckoutPayment = DropPaymentParser.getUPICheckoutPayment(
+                        (String) args.get(0),
+                        CFPayment.CFSDKFlavour.INTENT,
+                        CFPayment.CFSDKFramework.CORDOVA.withVersion((String) args.get(1)));
+                startUPIPayment(cfupiIntentCheckoutPayment, callbackContext);
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (callbackContext != null) {
+                    PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR,
+                            getJSONObject(CFUtil.getFailedResponse(e.getMessage()), "NA"));
+                    sendResult(callbackContext, pluginResult);
+                }
+            }
+            return true;
         } else if ("setCallback".equals(action)) {
             this.callbackContext = callbackContext;
             setCallback();
@@ -83,6 +100,20 @@ public class CFPaymentGateway extends CordovaPlugin implements CFCheckoutRespons
         Activity activity = cordova.getActivity();
         try {
             CFPaymentGatewayService.getInstance().doPayment(activity, dropCheckoutPayment);
+        } catch (CFException cfException) {
+            cfException.printStackTrace();
+            if (callbackContext != null) {
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR,
+                        getJSONObject(CFUtil.getFailedResponse(cfException.getMessage()), "NA"));
+                sendResult(callbackContext, pluginResult);
+            }
+        }
+    }
+
+    private void startUPIPayment(CFUPIIntentCheckoutPayment cfupiIntentCheckoutPayment, CallbackContext callbackContext) {
+        Activity activity = cordova.getActivity();
+        try {
+            CFPaymentGatewayService.getInstance().doPayment(activity, cfupiIntentCheckoutPayment);
         } catch (CFException cfException) {
             cfException.printStackTrace();
             if (callbackContext != null) {
