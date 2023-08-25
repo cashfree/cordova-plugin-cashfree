@@ -116,3 +116,7 @@ CFPaymentGateway.doDropPayment(dropPaymentObject)
 ```js
 CFPaymentGateway.doWebCheckoutPayment(webPaymentObject)
 ```
+### Step 4.2: Initiate Web Checkout Payment
+```js
+CFPaymentGateway.doUPIPayment(upiPaymentObject)
+```
