@@ -1,7 +1,18 @@
+# Cashfree Cordova SDK Sample
+
+![GitHub](https://img.shields.io/github/license/cashfree/cordova-plugin-cashfree) ![Discord](https://img.shields.io/discord/931125665669972018?label=discord) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/cashfree/cordova-plugin-cashfree/master) ![GitHub release (with filter)](https://img.shields.io/github/v/release/cashfree/cordova-plugin-cashfree?label=latest) ![GitHub forks](https://img.shields.io/github/forks/cashfree/cordova-plugin-cashfree) ![GitHub Repo stars](https://img.shields.io/github/stars/cashfree/cordova-plugin-cashfree)
+
+
+![Sample Banner Image](https://maven.cashfree.com/images/github-header-image-cordova.png)
+
+## **Description** 
+
+Sample integration project for Cashfree Payment Gateway's Cordova SDK, facilitating seamless and secure payment processing within your Cordova application.
+
 ## Supported platforms
 
 - Android
-- iOS
+- Cordova
 
 
 ## Installation:
@@ -120,3 +131,21 @@ CFPaymentGateway.doWebCheckoutPayment(webPaymentObject)
 ```js
 CFPaymentGateway.doUPIPayment(upiPaymentObject)
 ```
+## Getting help
+
+If you have questions, concerns, bug reports, etc, you can reach out to us using one of the following 
+
+1. File an issue in this repository's Issue Tracker.
+2. Send a message in our discord channel. Join our [discord server](https://discord.gg/znT6X45qDS) to get connected instantly.
+3. Send an email to care@cashfree.com
+
+## Getting involved
+
+For general instructions on _how_ to contribute please refer to [CONTRIBUTING](CONTRIBUTING.md).
+
+
+----
+
+## Open source licensing and other misc info
+1. [LICENSE](https://github.com/cashfree/cordova-plugin-cashfree/blob/master/LICENSE.md)
+2. [CODE OF CONDUCT](https://github.com/cashfree/cordova-plugin-cashfree/blob/master/CODE_OF_CONDUCT.md)
