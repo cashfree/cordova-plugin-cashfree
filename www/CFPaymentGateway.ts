@@ -1,4 +1,5 @@
 const PLUGIN_NAME = "CFPaymentGateway";
+const version = "1.0.6"
 
 declare let cordova: any
 function validateDropInput(cfDropPayment: any) {
@@ -95,7 +96,7 @@ const CFPaymentGatewayService = module.exports = {
                 // @ts-ignore
                 callback.onError(error);
             }
-        }, PLUGIN_NAME, 'doUPIPayment', [JSON.stringify(cfUPIPayment), "1.0.5"]);
+        }, PLUGIN_NAME, 'doUPIPayment', [JSON.stringify(cfUPIPayment), version]);
     },
     doDropPayment(cfDropPayment: any) {
         const callback = this.cfCallback;
@@ -119,7 +120,7 @@ const CFPaymentGatewayService = module.exports = {
                 // @ts-ignore
                 callback.onError(error);
             }
-        }, PLUGIN_NAME, 'doDropPayment', [JSON.stringify(cfDropPayment), "1.0.5"]);
+        }, PLUGIN_NAME, 'doDropPayment', [JSON.stringify(cfDropPayment), version]);
     },
     doWebCheckoutPayment(cfWebPayment: any) {
         const callback = this.cfCallback;
@@ -143,7 +144,7 @@ const CFPaymentGatewayService = module.exports = {
                 // @ts-ignore
                 callback.onError(error);
             }
-        }, PLUGIN_NAME, 'doWebCheckoutPayment', [JSON.stringify(cfWebPayment), "1.0.5"]);
+        }, PLUGIN_NAME, 'doWebCheckoutPayment', [JSON.stringify(cfWebPayment), version]);
     },
     setCallback(cfCallback: any) {
         this.cfCallback = cfCallback;
