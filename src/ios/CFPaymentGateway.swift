@@ -11,6 +11,10 @@ class CFPaymentGateway : CDVPlugin {
         super.init()
     }
 
+    override init!(webViewEngine theWebViewEngine: WKWebView!) {
+        super.init(webViewEngine: theWebViewEngine)
+    }
+
     @objc(doDropPayment:)
     func doDropPayment(_ command: CDVInvokedUrlCommand) -> Void {
         self.callbackId = command.callbackId ?? "";
