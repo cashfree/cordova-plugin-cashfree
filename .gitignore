@@ -3,7 +3,6 @@ package-lock.json
 .idea
 .vscode
 yarn-lock.json
-dist
 .DS_Store
 examples/*/platforms/
 examples/*/plugins/
