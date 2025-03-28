@@ -32,7 +32,6 @@
         "ANDROIDBLACKLISTSECURESOCKETPROTOCOLS": "SSLv3,TLSv1"
       },
       "cordova-plugin-native-spinner": {},
-      "cordova-plugin-cashfree-pg": {},
       "cordova-plugin-device": {}
     },
     "platforms": [
@@ -41,7 +40,6 @@
     ]
   },
   "dependencies": {
-    "cashfree-pg-api-contract": "^2.0.7",
-    "cordova-plugin-cashfree-pg": "^1.0.7-dev.0"
+    "cashfree-pg-api-contract": "^2.0.7"
   }
 }
