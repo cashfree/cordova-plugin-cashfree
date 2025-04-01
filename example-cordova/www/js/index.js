@@ -22,8 +22,8 @@
 
 document.addEventListener('deviceready', onDeviceReady, false);
 
-const SESSION_ID = 'session_VM4191m7GpTE1iflPEA3HTaUJvYO9pIybFtjhZgsKNwdIvjRHgiyt_O5Q9_CmXrPa6iU7Ygs9YBwPu6GUNRVLwd-0-du2ulkJsxhdrfEuBBURBw5HoheY1q6tApaymentpayment' // payment_session_id
-const ORDER_ID = 'order_101024392qTVH5dPzNL2TkzgGl88VWO2RwT' // order_id
+const SESSION_ID = 'session_If0yBbWOPv2QIa6kFmEdSmpsHOzmTUX9hFQiuguiGfeNWd79gNZJGgxlTOvfB9OHbddq3gqU2ZddGD6trhtroIx1aYyBRqhF3R_OOE00W7R51YAi067n-tApayment' // payment_session_id
+const ORDER_ID = 'devstudio_7311338815524467689' // order_id
 
 const ENV = "SANDBOX" // "SANDBOX" or "PRODUCTION"
 
