@@ -18,7 +18,7 @@
     "cordova-ios": "^7.1.1",
     "cordova-plugin-add-swift-support": "^2.0.2",
     "cordova-plugin-advanced-http": "^3.2.0",
-    "cordova-plugin-cashfree-pg": "1.0.9-dev.0",
+    "cordova-plugin-cashfree-pg": "file:../cordova-plugin-cashfree-pg-1.0.9.tgz",
     "cordova-plugin-device": "^2.0.3",
     "cordova-plugin-file": "^6.0.2",
     "cordova-plugin-native-spinner": "^1.1.3",

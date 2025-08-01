@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="cordova-plugin-cashfree-pg" version="1.0.9" xmlns="http://apache.org/cordova/ns/plugins/1.0">
+<plugin id="cordova-plugin-cashfree-pg" version="1.0.10" xmlns="http://apache.org/cordova/ns/plugins/1.0">
     <name>CFPaymentGateway</name>
     <js-module name="CFPaymentGateway" src="dist/CFPaymentGateway.js">
         <clobbers target="CFPaymentGateway"/>
@@ -23,7 +23,14 @@
         </config-file>
         <config-file target="*-Info.plist" parent="LSApplicationCategoryType">
         </config-file>
-        <framework src="CashfreePG" type="podspec" spec="~>2.2.4"/>
+        <podspec>
+            <config>
+                <source url="https://github.com/CocoaPods/specs.git"/>
+            </config>
+            <pods use-frameworks="true">
+                <pod name="CashfreePG" spec="~>2.2.4"/>
+            </pods>
+        </podspec>
     </platform>
     <platform name="android">
         <framework custom="true" src="src/android/CashfreePGSDK.gradle" type="gradleReference"/>
