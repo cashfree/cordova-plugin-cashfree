@@ -11,10 +11,6 @@ class CFPaymentGateway : CDVPlugin {
         super.init()
     }
 
-    override init!(webViewEngine theWebViewEngine: WKWebView!) {
-        super.init(webViewEngine: theWebViewEngine)
-    }
-
     @objc(doDropPayment:)
     func doDropPayment(_ command: CDVInvokedUrlCommand) -> Void {
         self.callbackId = command.callbackId ?? "";
@@ -46,6 +42,28 @@ class CFPaymentGateway : CDVPlugin {
                 dropObject!.setPlatform("icor-i-\(version)-xx-m-s-x-i-\(systemVersion.prefix(4))")
                 let vc = self.viewController;
                 try CFPaymentGatewayService.getInstance().doPayment(dropObject!, viewController: vc!)
+            }
+        }
+        catch {
+            print (error)
+        }
+    }
+
+    @objc(doSubscriptionPayment:)
+    func doSubscriptionPayment(_ command: CDVInvokedUrlCommand) -> Void {
+        self.callbackId = command.callbackId ?? "";
+        let data = command.arguments[0] as? String ?? ""
+        let version = command.arguments[1] as? String ?? ""
+        do {
+            let subscriptionSessionObj = try! parseSubscriptionSession(paymentObject: data)
+            if (subscriptionSessionObj != nil) {
+                let subscriptionWebCheckoutPayment = try! CFSubscriptionPayment.CFSubscriptionPaymentBuilder()
+                                    .setSession(subscriptionSessionObj!)
+                                    .build()
+                let systemVersion = UIDevice.current.systemVersion
+                subscriptionWebCheckoutPayment.setPlatform("icor-sbc-\(version)-xx-m-s-x-i-\(systemVersion.prefix(4))")
+                let vc = self.viewController;
+                try CFPaymentGatewayService.getInstance().startSubscription(subscriptionWebCheckoutPayment, viewController: vc!)
             }
         }
         catch {
@@ -147,6 +165,43 @@ class CFPaymentGateway : CDVPlugin {
         return nil
     }
 
+    private func parseSubscriptionSession(paymentObject: String) throws -> CFSubscriptionSession? {
+        let data = paymentObject.data(using: .utf8)!
+        do {
+            if let output = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? Dictionary<String, Any> {
+                let session = getSubscriptionSession(paymentObject: output)
+                return session
+            }
+        } catch let e {
+            let error = e as! CashfreeError
+            print(error.localizedDescription)
+            // Handle errors here
+        }
+        return nil
+    }
+
+
+    private func getSubscriptionSession(paymentObject: Dictionary<String,Any>) -> CFSubscriptionSession? {
+        if let sessionDict = paymentObject["session"] as? Dictionary<String, String> {
+            do {
+                let subscriptionBuilder =  CFSubscriptionSession.CFSubscriptionSessionBuilder()
+                    .setSubscriptionId(sessionDict["subscription_id"] ?? "")
+                    .setSubscriptionSessionId(sessionDict["subscription_session_id"] ?? "")
+                if (sessionDict["environment"] == "SANDBOX") {
+                    subscriptionBuilder.setEnvironment(CFENVIRONMENT.SANDBOX)
+                } else {
+                    subscriptionBuilder.setEnvironment(CFENVIRONMENT.PRODUCTION)
+                }
+                let subscriptionSession = try subscriptionBuilder.build()
+                return subscriptionSession
+            } catch let e {
+                let error = e as! CashfreeError
+                print(error.localizedDescription)
+                // Handle errors here
+            }
+        }
+        return nil
+    }
 
     private func getSession(paymentObject: Dictionary<String,Any>) -> CFSession? {
         if let sessionDict = paymentObject["session"] as? Dictionary<String, String> {
