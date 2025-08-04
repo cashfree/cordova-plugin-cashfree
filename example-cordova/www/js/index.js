@@ -22,8 +22,8 @@
 
 document.addEventListener('deviceready', onDeviceReady, false);
 
-const SESSION_ID = 'session_B3mQiDXldyU_Z1k3cI3QzKj2AeiaVOa9SuT3MfUk0oaSD5ILw6g2VSVKQVvLC3WKOpTuaRz83R-pLnYAEcTMiPrJZlSulUOna7PsJz-3f5VLlQGkwK0aLQ5Qevcpayment' // payment_session_id
-const ORDER_ID = 'devstudio_7356983317204195861' // order_id
+const SESSION_ID = 'sub_session_f-e0jnzQa_qQtkFtPZmWmxj1We1Tu5f76DImA4ySE5CklsjjJVTiGbyTGxGM-ZKLUJV8-ft2SBYRmws180vI-nivXWq56qJhfY75AIjY823dgn1bLGUADSgZ1yqN_6spayment' // payment_session_id
+const ORDER_ID = 'devstudio_subs_7358099936054719343' // order_id
 
 const ENV = "SANDBOX" // "SANDBOX" or "PRODUCTION"
 
@@ -41,6 +41,11 @@ function onDeviceReady() {
     webElement.addEventListener("click", (e) => initiateWebPayment());
     dropElement.addEventListener("click", (e) => initiateDropPayment());
     upiElement.addEventListener("click", (e) => initiateUPIPayment());
+    
+    let subscriptionElement = document.getElementById("onSubscription");
+    subscriptionElement.addEventListener('touchstart', (e) => addButtonClass(subscriptionElement));
+    subscriptionElement.addEventListener('touchend', (e) => removeButtonClass(subscriptionElement));
+    subscriptionElement.addEventListener("click", (e) => initiateSubscriptionPayment());
 
     const callbacks = {
         onVerify: function (result) {
@@ -115,6 +120,19 @@ function initiateWebPayment() {
             "environment": ENV
         }
     })
+}
+
+function initiateSubscriptionPayment() {
+    document.getElementById('response_text').innerText = "Response will Show Here"
+    var subSession = {
+        "session": {
+            "subscription_session_id": SESSION_ID,
+            "subscription_id": ORDER_ID,
+            "environment": ENV
+        }
+    }
+    console.log("Subscription Session:", JSON.stringify(subSession))
+    CFPaymentGateway.doSubscriptionPayment(subSession)
 }
 
 function addButtonClass(element) {

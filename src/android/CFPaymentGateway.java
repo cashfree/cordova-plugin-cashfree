@@ -4,13 +4,17 @@ import android.app.Activity;
 
 import com.cashfree.pg.api.CFPaymentGatewayService;
 import com.cashfree.pg.api.util.DropPaymentParser;
+import com.cashfree.pg.core.api.CFSubscriptionSession;
 import com.cashfree.pg.core.api.CFSession;
 import com.cashfree.pg.core.api.CFTheme;
 import com.cashfree.pg.core.api.base.CFPayment;
 import com.cashfree.pg.core.api.callback.CFCheckoutResponseCallback;
+import com.cashfree.pg.core.api.callback.CFSubscriptionResponseCallback;
 import com.cashfree.pg.core.api.exception.CFException;
+import com.cashfree.pg.core.api.subscription.CFSubscriptionPayment;
 import com.cashfree.pg.core.api.exception.CFInvalidArgumentException;
 import com.cashfree.pg.core.api.utils.CFErrorResponse;
+import com.cashfree.pg.core.api.utils.CFSubscriptionResponse;
 import com.cashfree.pg.core.api.utils.CFUtil;
 import com.cashfree.pg.core.api.webcheckout.CFWebCheckoutPayment;
 import com.cashfree.pg.core.api.webcheckout.CFWebCheckoutTheme;
@@ -27,7 +31,7 @@ import org.json.JSONObject;
 /**
  * This class echoes a string called from JavaScript.
  */
-public class CFPaymentGateway extends CordovaPlugin implements CFCheckoutResponseCallback {
+public class CFPaymentGateway extends CordovaPlugin implements CFCheckoutResponseCallback, CFSubscriptionResponseCallback {
 
     private CallbackContext callbackContext;
 
@@ -72,6 +76,32 @@ public class CFPaymentGateway extends CordovaPlugin implements CFCheckoutRespons
                         CFPayment.CFSDKFlavour.INTENT,
                         CFPayment.CFSDKFramework.CORDOVA.withVersion((String) args.get(1)));
                 startUPIPayment(cfupiIntentCheckoutPayment, callbackContext);
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (callbackContext != null) {
+                    PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR,
+                            getJSONObject(CFUtil.getFailedResponse(e.getMessage()), "NA"));
+                    sendResult(callbackContext, pluginResult);
+                }
+            }
+            return true;
+        } else if ("doSubscriptionPayment".equals(action)) {
+            try {
+                JSONObject cfSubscriptionJson = new JSONObject((String) args.get(0));
+                JSONObject cfSubsSessionJson = cfSubscriptionJson.getJSONObject("session");
+                CFSubscriptionSession cfSubsSession = new CFSubscriptionSession.CFSubscriptionSessionBuilder()
+                        .setEnvironment(CFSubscriptionSession.Environment.valueOf(cfSubsSessionJson.getString("environment")))
+                        .setSubscriptionId(cfSubsSessionJson.getString("subscription_id"))
+                        .setSubscriptionSessionID(cfSubsSessionJson.getString("subscription_session_id"))
+                        .build();
+                CFSubscriptionPayment cfSubscriptionPayment = new CFSubscriptionPayment.CFSubscriptionCheckoutBuilder()
+                        .setSubscriptionSession(cfSubsSession)
+                        .build();
+
+                cfSubscriptionPayment.setCfSDKFlavour(CFPayment.CFSDKFlavour.SUBSCRIPTION);
+                cfSubscriptionPayment.setCfsdkFramework(CFPayment.CFSDKFramework.CORDOVA.withVersion((String) args.get(1)));
+
+                startSubscriptionPayment(cfSubscriptionPayment, callbackContext);
             } catch (Exception e) {
                 e.printStackTrace();
                 if (callbackContext != null) {
@@ -138,6 +168,21 @@ public class CFPaymentGateway extends CordovaPlugin implements CFCheckoutRespons
         }
     }
 
+    private void startSubscriptionPayment(CFSubscriptionPayment cfSubscriptionPayment, CallbackContext callbackContext) {
+        Activity activity = cordova.getActivity();
+        try {
+            CFPaymentGatewayService.getInstance().setSubscriptionCheckoutCallback(this);
+            CFPaymentGatewayService.getInstance().doSubscriptionPayment(activity, cfSubscriptionPayment);
+        } catch (CFException cfException) {
+            cfException.printStackTrace();
+            if (callbackContext != null) {
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR,
+                        getJSONObject(CFUtil.getFailedResponse(cfException.getMessage()), "NA"));
+                sendResult(callbackContext, pluginResult);
+            }
+        }
+    }
+
     private void setCallback() {
         try {
             CFPaymentGatewayService.getInstance().setCheckoutCallback(this);
@@ -168,6 +213,16 @@ public class CFPaymentGateway extends CordovaPlugin implements CFCheckoutRespons
                     getJSONObject(cfErrorResponse.toJSON(), s));
             sendResult(callbackContext, pluginResult);
         }
+    }
+
+    @Override
+    public void onSubscriptionVerify(CFSubscriptionResponse cfSubscriptionResponse) {
+        onPaymentVerify(cfSubscriptionResponse.getSubscriptionId());
+    }
+
+    @Override
+    public void onSubscriptionFailure(CFErrorResponse cfErrorResponse) {
+        onPaymentFailure(cfErrorResponse, "NA");
     }
 
     private static JSONObject getJSONObject(JSONObject jsonObject, String orderId) {

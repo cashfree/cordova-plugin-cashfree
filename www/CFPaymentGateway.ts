@@ -1,5 +1,5 @@
 const PLUGIN_NAME = "CFPaymentGateway";
-const version = "1.0.10"
+const version = "1.0.11"
 
 declare let cordova: any
 function validateDropInput(cfDropPayment: any) {
@@ -40,6 +40,27 @@ function validateWebInput(cfWebPayment: any) {
         }
     } else {
         return "cfWebPayment object is missing"
+    }
+}
+
+function validateSubscriptionInput(cfSubscriptionPayment: any) {
+    if (cfSubscriptionPayment) {
+        if (cfSubscriptionPayment.session) {
+            if (!cfSubscriptionPayment.session.subscription_session_id) {
+                return "subscription_session_id is missing in session object"
+            }
+            if (!cfSubscriptionPayment.session.subscription_id) {
+                return "subscription_id is missing in session object"
+            }
+            if (!cfSubscriptionPayment.session.environment) {
+                return "environment is missing in session object"
+            }
+            return null
+        } else {
+            return "session object is missing in cfSubscriptionPayment object"
+        }
+    } else {
+        return "cfSubscriptionPayment object is missing"
     }
 }
 
@@ -145,6 +166,25 @@ const CFPaymentGatewayService = module.exports = {
                 callback.onError(error);
             }
         }, PLUGIN_NAME, 'doWebCheckoutPayment', [JSON.stringify(cfWebPayment), version]);
+    },
+    doSubscriptionPayment(cfSubscriptionPayment: any) {
+        const callback = this.cfCallback;
+        const error = validateSubscriptionInput(cfSubscriptionPayment)
+        if (error) {
+            if (callback) {
+                callback.onError(getError(error));
+            }
+            return
+        }
+        cordova.exec(function (result: any) {
+            if (callback) {
+                callback.onVerify(result);
+            }
+        }, function (error: any) {
+            if (callback) {
+                callback.onError(error);
+            }
+        }, PLUGIN_NAME, 'doSubscriptionPayment', [JSON.stringify(cfSubscriptionPayment), version]);
     },
     setCallback(cfCallback: any) {
         this.cfCallback = cfCallback;
