@@ -12,7 +12,7 @@ Sample integration project for Cashfree Payment Gateway's Cordova SDK, facilitat
 ## Supported platforms
 
 - Android
-- Cordova
+- iOS
 
 
 ## Installation:
@@ -39,7 +39,7 @@ Note: This API is called only from your <b><u>backend</u></b> as it uses **secre
 
 ## Step 2: Create a Payment Object
 
-### Step 2.1: Create a Drop Payment Object
+### Step 2.1: Create a Drop Payment Object (Deprecated)
 ```js
 const dropPaymentObject = {
     "components": ["CARD", "UPI", "NB", "WALLET", "PAY_LATER"], //optional
@@ -118,7 +118,7 @@ CFPaymentGateway.setCallback(callbacks) // onLoad of the Page
 
 ## Step 4: Initiate Payment
 
-### Step 4.1: Initiate Drop Payment
+### Step 4.1: Initiate Drop Payment (Deprecated)
 ```js
 CFPaymentGateway.doDropPayment(dropPaymentObject)
 ```
