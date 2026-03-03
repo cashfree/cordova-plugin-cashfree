@@ -15,10 +15,19 @@
 
         <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
             <array>
+                <string>amazonpay</string>
+                <string>upi</string>
+                <string>credpay</string>
+                <string>bhim</string>
+                <string>paytmmp</string>
                 <string>phonepe</string>
                 <string>tez</string>
-                <string>paytmmp</string>
-                <string>bhim</string>
+                <string>navipay</string>
+                <string>mobikwik</string>
+                <string>myairtel</string>
+                <string>popclubapp</string>
+                <string>super</string>
+                <string>kiwi</string>
             </array>
         </config-file>
         <config-file target="*-Info.plist" parent="LSApplicationCategoryType">
