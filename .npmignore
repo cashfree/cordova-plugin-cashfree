@@ -8,3 +8,5 @@ example-cordova/
 *.log
 .gitignore
 .gitattributes
+.claude/
+.history/
