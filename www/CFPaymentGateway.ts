@@ -1,5 +1,5 @@
 const PLUGIN_NAME = "CFPaymentGateway";
-const version = "1.0.11"
+const version = "1.0.12"
 
 declare let cordova: any
 function validateDropInput(cfDropPayment: any) {

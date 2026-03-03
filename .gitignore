@@ -10,3 +10,5 @@ examples/*/plugins/
 examples/*/www/
 .history/
 /.history
+.claude/
+/.claude
