@@ -61,7 +61,7 @@ class CFPaymentGateway : CDVPlugin {
                                     .setSession(subscriptionSessionObj!)
                                     .build()
                 let systemVersion = UIDevice.current.systemVersion
-                subscriptionWebCheckoutPayment.setPlatform("icor-sbc-\(version)-xx-m-s-x-i-\(systemVersion.prefix(4))")
+                subscriptionWebCheckoutPayment.setPlatform("icor-s-\(version)-xx-m-s-x-i-\(systemVersion.prefix(4))")
                 let vc = self.viewController;
                 try CFPaymentGatewayService.getInstance().startSubscription(subscriptionWebCheckoutPayment, viewController: vc!)
             }
