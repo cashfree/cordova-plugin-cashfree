@@ -1,5 +1,5 @@
 const PLUGIN_NAME = "CFPaymentGateway";
-const version = "1.0.12"
+const version = "1.1.0"
 
 declare let cordova: any
 function validateDropInput(cfDropPayment: any) {
@@ -119,6 +119,7 @@ const CFPaymentGatewayService = module.exports = {
             }
         }, PLUGIN_NAME, 'doUPIPayment', [JSON.stringify(cfUPIPayment), version]);
     },
+    /** @deprecated Use doWebCheckoutPayment instead. */
     doDropPayment(cfDropPayment: any) {
         const callback = this.cfCallback;
         const error = validateDropInput(cfDropPayment)

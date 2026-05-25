@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="cordova-plugin-cashfree-pg" version="1.0.12" xmlns="http://apache.org/cordova/ns/plugins/1.0">
+<plugin id="cordova-plugin-cashfree-pg" version="1.1.0" xmlns="http://apache.org/cordova/ns/plugins/1.0">
     <name>CFPaymentGateway</name>
     <js-module name="CFPaymentGateway" src="dist/CFPaymentGateway.js">
         <clobbers target="CFPaymentGateway"/>
@@ -11,7 +11,6 @@
             </feature>
         </config-file>
         <source-file src="src/ios/CFPaymentGateway.swift"/>
-        <dependency id="cordova-plugin-add-swift-support" version="2.0.2"/>
 
         <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
             <array>
@@ -28,6 +27,8 @@
                 <string>popclubapp</string>
                 <string>super</string>
                 <string>kiwi</string>
+                <string>simplypayupi</string>
+                <string>whatsapp-consumer</string>
             </array>
         </config-file>
         <config-file target="*-Info.plist" parent="LSApplicationCategoryType">
@@ -37,7 +38,7 @@
                 <source url="https://github.com/CocoaPods/specs.git"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="CashfreePG" spec="~>2.2.7"/>
+                <pod name="CashfreePG" spec="~>2.4.0"/>
             </pods>
         </podspec>
     </platform>

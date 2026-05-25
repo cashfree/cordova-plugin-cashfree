@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Cordova plugin (`cordova-plugin-cashfree-pg`) that bridges JavaScript apps to the native Cashfree Payment Gateway SDKs on Android and iOS. Current version: **1.0.12**.
+This is a Cordova plugin (`cordova-plugin-cashfree-pg`) that bridges JavaScript apps to the native Cashfree Payment Gateway SDKs on Android and iOS. Current version: **1.1.0**.
 
 ## Build Commands
 
@@ -70,8 +70,8 @@ plugin.xml                          # Cordova plugin manifest
 | `doSubscriptionPayment()` | `doSubscriptionPayment` | Recurring subscriptions |
 
 ### Native SDK Versions
-- **Android:** Cashfree PG API `2.2.9` (via `CashfreePGSDK.gradle`)
-- **iOS:** CashfreePG `~2.2.7` (via CocoaPods)
+- **Android:** Cashfree PG API `2.4.0` (via `CashfreePGSDK.gradle`)
+- **iOS:** CashfreePG `~2.4.0` (via CocoaPods)
 
 ### Platform String Convention
 Both native layers embed a platform/version identifier into each payment object for Cashfree telemetry.
@@ -85,20 +85,21 @@ iOS platform strings vary by payment method:
 | `doDropPayment` | `icor-d-{version}-xx-m-s-x-i-{iOSVersion}` |
 | `doUPIPayment` | `icor-i-{version}-xx-m-s-x-i-{iOSVersion}` |
 | `doWebCheckoutPayment` | `icor-c-{version}-xx-m-s-x-i-{iOSVersion}` |
-| `doSubscriptionPayment` | `icor-sbc-{version}-xx-m-s-x-i-{iOSVersion}` |
+| `doSubscriptionPayment` | `icor-s-{version}-xx-m-s-x-i-{iOSVersion}` |
 
-The plugin version string (`1.0.12`) is hardcoded in `www/CFPaymentGateway.ts` and passed to native on every call — update it when releasing a new version.
+The plugin version string (`1.1.0`) is hardcoded in `www/CFPaymentGateway.ts` and passed to native on every call — update it when releasing a new version.
 
 ### iOS-Specific Notes
-- Requires `cordova-plugin-add-swift-support` v2.0.2
-- `LSApplicationQueriesSchemes` registered in `plugin.xml` for UPI app intents: `phonepe`, `tez`, `paytmmp`, `bhim`, `upi`, `amazonpay`, `credpay`, `navipay`, `mobikwik`, `myairtel`, `popclubapp`, `super`, `kiwi`
+- Swift support is built into `cordova-ios` 8.x — `cordova-plugin-add-swift-support` is no longer required and has been removed
+- Minimum iOS deployment target: **13.0**
+- `LSApplicationQueriesSchemes` registered in `plugin.xml` for UPI app intents: `phonepe`, `tez`, `paytmmp`, `bhim`, `upi`, `amazonpay`, `credpay`, `navipay`, `mobikwik`, `myairtel`, `popclubapp`, `super`, `kiwi`, `simplypayupi`, `whatsapp-consumer`
 - CocoaPods managed; run `pod install` inside the Xcode project if needed
 - `doUPIPayment` on iOS uses `CFDropCheckoutPayment` (same as drop) but hardcodes the component to `["upi"]` only — it does **not** use a dedicated UPI SDK type
 - Subscription uses `CFPaymentGatewayService.getInstance().startSubscription()`, not `doPayment()`
 
 ### Android-Specific Notes
 - `CashfreePGSDK.gradle` is injected into the app's build via `plugin.xml` `<framework>` tag
-- minSdkVersion: 23, targetSdkVersion/compileSdkVersion: 35
+- minSdkVersion: 23, targetSdkVersion/compileSdkVersion: **36** (Android 16)
 - AndroidX required (`AndroidXEnabled: true`)
 - Drop/Web/UPI use `DropPaymentParser` helpers; Subscription parses JSON manually via `CFSubscriptionSession.CFSubscriptionSessionBuilder`
 - Subscription registers its callback separately (`setSubscriptionCheckoutCallback`) inside `startSubscriptionPayment()`, whereas all other methods share the callback set via `setCallback` → `setCheckoutCallback`
