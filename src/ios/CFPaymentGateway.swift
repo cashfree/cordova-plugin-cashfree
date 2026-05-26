@@ -10,6 +10,10 @@ class CFPaymentGateway : CDVPlugin {
     override init() {
         super.init()
     }
+    
+    override init(webViewEngine: WKWebView) {
+        super.init(webViewEngine: webViewEngine)
+    }
 
     private func sendViewControllerNilError() {
         let data: [String: String] = [
