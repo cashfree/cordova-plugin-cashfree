@@ -22,54 +22,136 @@
 
 document.addEventListener('deviceready', onDeviceReady, false);
 
-const SESSION_ID = 'sub_session_f-e0jnzQa_qQtkFtPZmWmxj1We1Tu5f76DImA4ySE5CklsjjJVTiGbyTGxGM-ZKLUJV8-ft2SBYRmws180vI-nivXWq56qJhfY75AIjY823dgn1bLGUADSgZ1yqN_6spayment' // payment_session_id
-const ORDER_ID = 'devstudio_subs_7358099936054719343' // order_id
+const ENV = "SANDBOX"; // "SANDBOX" or "PRODUCTION"
 
-const ENV = "SANDBOX" // "SANDBOX" or "PRODUCTION"
+const CF_CONFIG = {
+    SANDBOX: {
+        baseUrl: "https://sandbox.cashfree.com/pg",
+        clientId: "TEST430329ae80e0f32e41a393d78b923034",
+        clientSecret: "TESTaf195616268bd6202eeb3bf8dc458956e7192a85"
+    },
+    PRODUCTION: {
+        baseUrl: "https://api.cashfree.com/pg",
+        clientId: "",
+        clientSecret: ""
+    }
+};
+
+// Populated after createOrder(); used by all payment methods.
+let currentSessionId = null;
+let currentOrderId = null;
 
 function onDeviceReady() {
     console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
-    let webElement = document.getElementById("onWEB");
-    let dropElement = document.getElementById("onDrop");
-    let upiElement = document.getElementById("onUPI");
-    webElement.addEventListener('touchstart', (e) => addButtonClass(webElement));
-    webElement.addEventListener('touchend', (e) => removeButtonClass(webElement));
-    dropElement.addEventListener('touchstart', (e) => addButtonClass(dropElement));
-    dropElement.addEventListener('touchend', (e) => removeButtonClass(dropElement));
-    upiElement.addEventListener('touchstart', (e) => addButtonClass(upiElement));
-    upiElement.addEventListener('touchend', (e) => removeButtonClass(upiElement));
-    webElement.addEventListener("click", (e) => initiateWebPayment());
-    dropElement.addEventListener("click", (e) => initiateDropPayment());
-    upiElement.addEventListener("click", (e) => initiateUPIPayment());
-    
-    let subscriptionElement = document.getElementById("onSubscription");
-    subscriptionElement.addEventListener('touchstart', (e) => addButtonClass(subscriptionElement));
-    subscriptionElement.addEventListener('touchend', (e) => removeButtonClass(subscriptionElement));
-    subscriptionElement.addEventListener("click", (e) => initiateSubscriptionPayment());
 
-    const callbacks = {
+    const createOrderEl   = document.getElementById("onCreateOrder");
+    const webElement      = document.getElementById("onWEB");
+    const dropElement     = document.getElementById("onDrop");
+    const upiElement      = document.getElementById("onUPI");
+    const subscriptionEl  = document.getElementById("onSubscription");
+
+    [createOrderEl, webElement, dropElement, upiElement, subscriptionEl].forEach(el => {
+        el.addEventListener('touchstart', () => addButtonClass(el));
+        el.addEventListener('touchend',   () => removeButtonClass(el));
+    });
+
+    createOrderEl.addEventListener("click",  () => createOrder());
+    webElement.addEventListener("click",     () => initiateWebPayment());
+    dropElement.addEventListener("click",    () => initiateDropPayment());
+    upiElement.addEventListener("click",     () => initiateUPIPayment());
+    subscriptionEl.addEventListener("click", () => initiateSubscriptionPayment());
+
+    CFPaymentGateway.setCallback({
         onVerify: function (result) {
-            console.log("This is in the Application Verify: " + JSON.parse(JSON.stringify(result)));
-            document.getElementById('response_text').innerHTML = `{ <br>
-                orderID: ${result.orderID} <br>
-            }`
+            console.log("Verify:", result);
+            document.getElementById('response_text').innerHTML =
+                `{ <br> orderID: ${result.orderID} <br> }`;
         },
-        onError: function (error){
-            console.log("This is in the Application Error: " + JSON.parse(JSON.stringify(error)));
+        onError: function (error) {
+            console.log("Error:", error);
             document.getElementById('response_text').innerHTML = `{ <br>
                 orderID: ${error.orderID} <br>
                 status: ${error.status} <br>
                 code: ${error.code} <br>
                 type: ${error.type} <br>
                 message: ${error.message} <br>
-            }`
+            }`;
         }
+    });
+}
+
+function createOrder() {
+    const btn = document.getElementById("onCreateOrder");
+    btn.disabled = true;
+    btn.innerText = "Creating...";
+    document.getElementById('response_text').innerText = "Creating order...";
+
+    const cfg = CF_CONFIG[ENV];
+    const orderId = "cordova_" + Date.now();
+    const body = {
+        order_amount: 1.00,
+        order_currency: "INR",
+        order_id: orderId,
+        customer_details: {
+            customer_id: "devstudio_user",
+            customer_phone: "9876543210"
+        },
+        order_meta: {
+            return_url: cfg.baseUrl.replace("/pg", "") + "/devstudio/preview/pg/web/checkout?order_id={order_id}"
+        }
+    };
+
+    cordova.plugin.http.setDataSerializer("json");
+    cordova.plugin.http.post(
+        cfg.baseUrl + "/orders",
+        body,
+        {
+            "x-client-id": cfg.clientId,
+            "x-client-secret": cfg.clientSecret,
+            "x-api-version": "2025-01-01",
+            "Accept": "application/json"
+        },
+        function (response) {
+            try {
+                const data = JSON.parse(response.data);
+                if (!data.payment_session_id) {
+                    throw new Error(data.message || JSON.stringify(data));
+                }
+                currentSessionId = data.payment_session_id;
+                currentOrderId   = data.order_id;
+
+                document.getElementById("order_info_text").innerHTML =
+                    `<b>order_id:</b> ${currentOrderId}<br><b>session_id:</b> ${currentSessionId}`;
+                document.getElementById("order_info").classList.remove("hidden");
+                document.getElementById('response_text').innerText = "Order created. Tap a payment button.";
+                console.log("Order created:", currentOrderId, currentSessionId);
+            } catch (e) {
+                document.getElementById('response_text').innerText = "Parse error: " + e.message;
+                console.error("createOrder parse error:", e);
+            }
+            btn.disabled = false;
+            btn.innerText = "Create Order";
+        },
+        function (error) {
+            document.getElementById('response_text').innerText = "Create order failed: " + error.error;
+            console.error("createOrder error:", error);
+            btn.disabled = false;
+            btn.innerText = "Create Order";
+        }
+    );
+}
+
+function requireOrder() {
+    if (!currentSessionId || !currentOrderId) {
+        document.getElementById('response_text').innerText = "Tap 'Create Order' first.";
+        return false;
     }
-    CFPaymentGateway.setCallback(callbacks)
+    return true;
 }
 
 function initiateDropPayment() {
-    document.getElementById('response_text').innerText = "Response will Show Here"
+    if (!requireOrder()) return;
+    document.getElementById('response_text').innerText = "Response will Show Here";
     CFPaymentGateway.doDropPayment({
         "components": ["CARD", "UPI", "NB", "WALLET", "PAY_LATER"],
         "theme": {
@@ -81,15 +163,16 @@ function initiateDropPayment() {
             "secondaryTextColor": "#757575"
         },
         "session": {
-            "payment_session_id": SESSION_ID,
-            "orderID": ORDER_ID,
+            "payment_session_id": currentSessionId,
+            "orderID": currentOrderId,
             "environment": ENV
         }
-    })
+    });
 }
 
 function initiateUPIPayment() {
-    document.getElementById('response_text').innerText = "Response will Show Here"
+    if (!requireOrder()) return;
+    document.getElementById('response_text').innerText = "Response will Show Here";
     CFPaymentGateway.doUPIPayment({
         "theme": {
             "navigationBarBackgroundColor": "#E64A19",
@@ -100,39 +183,41 @@ function initiateUPIPayment() {
             "secondaryTextColor": "#757575"
         },
         "session": {
-            "payment_session_id": SESSION_ID,
-            "orderID": ORDER_ID,
+            "payment_session_id": currentSessionId,
+            "orderID": currentOrderId,
             "environment": ENV
         }
-    })
+    });
 }
 
 function initiateWebPayment() {
-    document.getElementById('response_text').innerText = "Response will Show Here"
+    if (!requireOrder()) return;
+    document.getElementById('response_text').innerText = "Response will Show Here";
     CFPaymentGateway.doWebCheckoutPayment({
         "theme": {
             "navigationBarBackgroundColor": "#E64A19",
             "navigationBarTextColor": "#FFFFFF"
         },
         "session": {
-            "payment_session_id": SESSION_ID,
-            "orderID": ORDER_ID,
+            "payment_session_id": currentSessionId,
+            "orderID": currentOrderId,
             "environment": ENV
         }
-    })
+    });
 }
 
 function initiateSubscriptionPayment() {
-    document.getElementById('response_text').innerText = "Response will Show Here"
+    if (!requireOrder()) return;
+    document.getElementById('response_text').innerText = "Response will Show Here";
     var subSession = {
         "session": {
-            "subscription_session_id": SESSION_ID,
-            "subscription_id": ORDER_ID,
+            "subscription_session_id": currentSessionId,
+            "subscription_id": currentOrderId,
             "environment": ENV
         }
-    }
-    console.log("Subscription Session:", JSON.stringify(subSession))
-    CFPaymentGateway.doSubscriptionPayment(subSession)
+    };
+    console.log("Subscription Session:", JSON.stringify(subSession));
+    CFPaymentGateway.doSubscriptionPayment(subSession);
 }
 
 function addButtonClass(element) {

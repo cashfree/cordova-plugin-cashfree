@@ -143,6 +143,38 @@ h1 {
     font-size: 16px;
 }
 
+.button-create {
+    background-color: #2E7D32;
+    margin-top: 40px;
+}
+
+.button-create:active {
+    background-color: #388E3C;
+}
+
+.order-info {
+    margin-top: 12px;
+    padding: 10px 16px;
+    background-color: #1B5E20;
+    border-radius: 8px;
+    width: 240px;
+    word-break: break-all;
+    font-size: 11px;
+    color: #C8E6C9;
+    box-sizing: border-box;
+}
+
+.hidden {
+    display: none;
+}
+
+@media screen and (prefers-color-scheme: dark) {
+    .order-info {
+        background-color: #1B5E20;
+        color: #C8E6C9;
+    }
+}
+
 
 @media screen and (prefers-color-scheme: dark) {
     body {

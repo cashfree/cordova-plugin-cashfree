@@ -11,90 +11,96 @@ class CFPaymentGateway : CDVPlugin {
         super.init()
     }
 
+    private func sendViewControllerNilError() {
+        let data: [String: String] = [
+            "status": "FAILED",
+            "message": "viewController is nil — plugin not attached to a view hierarchy",
+            "code": "initialization_error",
+            "type": "internal_error",
+            "orderID": "NA"
+        ]
+        let cdvResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: data)
+        self.commandDelegate?.send(cdvResult, callbackId: self.callbackId ?? "")
+    }
+
     @objc(doDropPayment:)
     func doDropPayment(_ command: CDVInvokedUrlCommand) -> Void {
-        self.callbackId = command.callbackId ?? "";
+        self.callbackId = command.callbackId ?? ""
+        guard let vc = self.viewController else { sendViewControllerNilError(); return }
         let data = command.arguments[0] as? String ?? ""
         let version = command.arguments[1] as? String ?? ""
         do {
-            let dropObject = try! parseDropPayment(paymentObject: data)
-            if (dropObject != nil) {
+            if let dropObject = try parseDropPayment(paymentObject: data) {
                 let systemVersion = UIDevice.current.systemVersion
-                dropObject!.setPlatform("icor-d-\(version)-xx-m-s-x-i-\(systemVersion.prefix(4))")
-                let vc = self.viewController;
-                try CFPaymentGatewayService.getInstance().doPayment(dropObject!, viewController: vc!)
+                dropObject.setPlatform("icor-d-\(version)-xx-m-s-x-i-\(systemVersion.prefix(4))")
+                try CFPaymentGatewayService.getInstance().doPayment(dropObject, viewController: vc)
             }
-        }
-        catch {
-            print (error)
+        } catch {
+            print(error)
         }
     }
 
     @objc(doUPIPayment:)
     func doUPIPayment(_ command: CDVInvokedUrlCommand) -> Void {
-        self.callbackId = command.callbackId ?? "";
+        self.callbackId = command.callbackId ?? ""
+        guard let vc = self.viewController else { sendViewControllerNilError(); return }
         let data = command.arguments[0] as? String ?? ""
         let version = command.arguments[1] as? String ?? ""
         do {
-            let dropObject = try! parseUPIPayment(paymentObject: data)
-            if (dropObject != nil) {
+            if let dropObject = try parseUPIPayment(paymentObject: data) {
                 let systemVersion = UIDevice.current.systemVersion
-                dropObject!.setPlatform("icor-i-\(version)-xx-m-s-x-i-\(systemVersion.prefix(4))")
-                let vc = self.viewController;
-                try CFPaymentGatewayService.getInstance().doPayment(dropObject!, viewController: vc!)
+                dropObject.setPlatform("icor-i-\(version)-xx-m-s-x-i-\(systemVersion.prefix(4))")
+                try CFPaymentGatewayService.getInstance().doPayment(dropObject, viewController: vc)
             }
-        }
-        catch {
-            print (error)
+        } catch {
+            print(error)
         }
     }
 
     @objc(doSubscriptionPayment:)
     func doSubscriptionPayment(_ command: CDVInvokedUrlCommand) -> Void {
-        self.callbackId = command.callbackId ?? "";
+        self.callbackId = command.callbackId ?? ""
+        guard let vc = self.viewController else { sendViewControllerNilError(); return }
         let data = command.arguments[0] as? String ?? ""
         let version = command.arguments[1] as? String ?? ""
         do {
-            let subscriptionSessionObj = try! parseSubscriptionSession(paymentObject: data)
-            if (subscriptionSessionObj != nil) {
-                let subscriptionWebCheckoutPayment = try! CFSubscriptionPayment.CFSubscriptionPaymentBuilder()
-                                    .setSession(subscriptionSessionObj!)
-                                    .build()
+            if let subscriptionSessionObj = try parseSubscriptionSession(paymentObject: data) {
+                let subscriptionWebCheckoutPayment = try CFSubscriptionPayment.CFSubscriptionPaymentBuilder()
+                    .setSession(subscriptionSessionObj)
+                    .build()
                 let systemVersion = UIDevice.current.systemVersion
-                subscriptionWebCheckoutPayment.setPlatform("icor-sbc-\(version)-xx-m-s-x-i-\(systemVersion.prefix(4))")
-                let vc = self.viewController;
-                try CFPaymentGatewayService.getInstance().startSubscription(subscriptionWebCheckoutPayment, viewController: vc!)
+                subscriptionWebCheckoutPayment.setPlatform("icor-s-\(version)-xx-m-s-x-i-\(systemVersion.prefix(4))")
+                try CFPaymentGatewayService.getInstance().startSubscription(subscriptionWebCheckoutPayment, viewController: vc)
             }
-        }
-        catch {
-            print (error)
+        } catch {
+            print(error)
         }
     }
 
     @objc(doWebCheckoutPayment:)
     func doWebCheckoutPayment(_ command: CDVInvokedUrlCommand) -> Void {
-        self.callbackId = command.callbackId ?? "";
+        self.callbackId = command.callbackId ?? ""
+        guard let vc = self.viewController else { sendViewControllerNilError(); return }
         let data = command.arguments[0] as? String ?? ""
         let version = command.arguments[1] as? String ?? ""
         do {
-            let webObject = try! parseWebPayment(paymentObject: data)
-            if (webObject != nil) {
-                let cfPaymentObject = try! CFWebCheckoutPayment.CFWebCheckoutPaymentBuilder()
-                                    .setSession(webObject!)
-                                    .build()
+            if let webObject = try parseWebPayment(paymentObject: data) {
+                let cfPaymentObject = try CFWebCheckoutPayment.CFWebCheckoutPaymentBuilder()
+                    .setSession(webObject)
+                    .build()
                 let systemVersion = UIDevice.current.systemVersion
                 cfPaymentObject.setPlatform("icor-c-\(version)-xx-m-s-x-i-\(systemVersion.prefix(4))")
-                let vc = self.viewController;
-                try CFPaymentGatewayService.getInstance().doPayment(cfPaymentObject, viewController: vc!)
+                cfPaymentObject.setCancelButtonVisibility(true)
+                try CFPaymentGatewayService.getInstance().doPayment(cfPaymentObject, viewController: vc)
             }
-        }
-        catch {
-            print (error)
+        } catch {
+            print(error)
         }
     }
 
     @objc(setCallback:)
     func setCallback(_ command: CDVInvokedUrlCommand) -> Void {
+        self.callbackId = command.callbackId ?? ""
         CFPaymentGatewayService.getInstance().setCallback(self)
     }
 
@@ -312,12 +318,12 @@ extension CFPaymentGateway: CFResponseDelegate {
                                        , "type": error.type ?? ""
                                        , "orderID": order_id]
         let cdvResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: data)
-        self.commandDelegate.send(cdvResult, callbackId: self.callbackId)
+        self.commandDelegate?.send(cdvResult, callbackId: self.callbackId ?? "")
     }
 
     func verifyPayment(order_id: String) {
         let body:[String: String] = ["orderID": order_id]
         let cdvResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: body)
-        self.commandDelegate.send(cdvResult, callbackId: self.callbackId)
+        self.commandDelegate?.send(cdvResult, callbackId: self.callbackId ?? "")
     }
 }

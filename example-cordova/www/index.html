@@ -43,10 +43,14 @@
 </head>
 <body>
 <div class="app">
-    <button class="button" id="onWEB">Web Checkout</button>
-    <button class="button" id="onDrop">Drop Checkout</button>
-    <button class="button" id="onUPI">UPI Checkout</button>
-    <button class="button" id="onSubscription">Subscription Checkout</button>
+    <button class="button button-create" id="onCreateOrder">Create Order</button>
+    <div id="order_info" class="order-info hidden">
+        <span id="order_info_text"></span>
+    </div>
+    <button class="button" id="onWEB">PG Web Checkout</button>
+    <button class="button" id="onDrop">Drop Checkout (Deprecated) </button>
+    <button class="button" id="onUPI">UPI Intent Checkout</button>
+    <button class="button" id="onSubscription">Subscription Web Checkout</button>
     <div id="response_text" class="container">
         Response will Show Here
     </div>
